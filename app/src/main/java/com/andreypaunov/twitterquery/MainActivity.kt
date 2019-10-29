@@ -7,10 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.andreypaunov.twitterquery.databinding.ActivityMainBinding
-import com.twitter.sdk.android.core.Callback
-import com.twitter.sdk.android.core.Result
-import com.twitter.sdk.android.core.TwitterException
-import com.twitter.sdk.android.core.TwitterSession
+import com.twitter.sdk.android.core.*
+import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import com.twitter.sdk.android.core.identity.TwitterLoginButton
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +31,28 @@ class MainActivity : AppCompatActivity() {
             override fun success(result: Result<TwitterSession>?) {
                 if (result != null) {
                     Log.d("====", result.data.userName)
+
+                    val session = TwitterCore.getInstance().sessionManager.activeSession
+                    val twitterAuthClient = TwitterAuthClient()
+
+                    twitterAuthClient.requestEmail(session, object: Callback<String>() {
+                        override fun success(result: Result<String>?) {
+                            if (result != null) {
+                                Log.d("====", result.data)
+                            }
+                        }
+
+                        override fun failure(exception: TwitterException?) {
+
+                        }
+                    })
+
+                    val twitterApiClient = TwitterCore.getInstance().apiClient
+
+                    val array = twitterApiClient.searchService.tweets("twitterdev", null, null, null, null, 20, null, 0, 0, false)
+
+
+                    Log.d("====", array)
                 }
             }
 

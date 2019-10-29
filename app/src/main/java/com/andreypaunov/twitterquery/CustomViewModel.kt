@@ -11,8 +11,5 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton
 
 class CustomViewModel(application: Application) : AndroidViewModel(application) {
 
-    fun onTwitterCallback(twitterLoginButton: TwitterLoginButton) {
-
-    }
 
 }
