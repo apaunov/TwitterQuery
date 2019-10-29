@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TwitterQuery</string>
+    <string name="twitter_api_key">V8uPJbl7iJs72wI8VqAW06RnP</string>
+    <string name="twitter_api_secret_key">4ETELUVIYlVmZhgvwTwxSIiKSclz4ESfeZdV850YzBNNJ04wdb</string>
 </resources>
