@@ -7,8 +7,9 @@ import com.andreypaunov.twitterquery.repositories.TwitterQueryRepository
 
 class TwitterQueryViewModel : ViewModel() {
 
-    var twitterLoginResult = MutableLiveData<TwitterLoginResult>()
+    val twitterLoginResult = MutableLiveData<TwitterLoginResult>()
     val twitterQueryRepository = TwitterQueryRepository()
+    val mapFragmentStarted = MutableLiveData<Boolean>()
 
 //    fun onTwitterCallbackReceived() {
 //                    val session = TwitterCore.getInstance().sessionManager.activeSession
