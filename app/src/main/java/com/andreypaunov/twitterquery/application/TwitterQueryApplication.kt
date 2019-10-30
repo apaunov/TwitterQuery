@@ -1,7 +1,8 @@
-package com.andreypaunov.twitterquery
+package com.andreypaunov.twitterquery.application
 
 import android.app.Application
 import android.util.Log
+import com.andreypaunov.twitterquery.R
 import com.twitter.sdk.android.core.DefaultLogger
 import com.twitter.sdk.android.core.Twitter
 import com.twitter.sdk.android.core.TwitterAuthConfig
