@@ -32,6 +32,7 @@ class TwitterFragment : BaseFragment() {
                 result?.let {
                     Log.d("====", "twitter callback")
                     binding.viewModel?.twitterQueryRepository?.callbackReceived()
+                    binding.viewModel?.destinationId?.value = TwitterFragmentDirections.openMap().actionId
                 }
             }
 

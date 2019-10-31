@@ -10,6 +10,7 @@ class TwitterQueryViewModel : ViewModel() {
     val twitterLoginResult = MutableLiveData<TwitterLoginResult>()
     val twitterQueryRepository = TwitterQueryRepository()
     val mapFragmentStarted = MutableLiveData<Boolean>()
+    val destinationId = MutableLiveData<Int>()
 
 //    fun onTwitterCallbackReceived() {
 //                    val session = TwitterCore.getInstance().sessionManager.activeSession
