@@ -3,10 +3,12 @@ package com.andreypaunov.twitterquery.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.andreypaunov.twitterquery.models.TwitterLoginResult
+import com.andreypaunov.twitterquery.models.UserLocation
 import com.andreypaunov.twitterquery.repositories.TwitterQueryRepository
 
 class TwitterQueryViewModel : ViewModel() {
 
+    var userLocation = MutableLiveData<UserLocation>()
     val twitterLoginResult = MutableLiveData<TwitterLoginResult>()
     val twitterQueryRepository = TwitterQueryRepository()
     val mapFragmentStarted = MutableLiveData<Boolean>()
