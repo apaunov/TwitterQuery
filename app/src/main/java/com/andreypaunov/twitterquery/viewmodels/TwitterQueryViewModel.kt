@@ -5,14 +5,19 @@ import androidx.lifecycle.ViewModel
 import com.andreypaunov.twitterquery.models.TwitterLoginResult
 import com.andreypaunov.twitterquery.models.UserLocation
 import com.andreypaunov.twitterquery.repositories.TwitterQueryRepository
+import com.twitter.sdk.android.core.models.Tweet
 
 class TwitterQueryViewModel : ViewModel() {
 
-    var userLocation = MutableLiveData<UserLocation>()
-    val twitterLoginResult = MutableLiveData<TwitterLoginResult>()
     val twitterQueryRepository = TwitterQueryRepository()
+    val twitterLoginResult = MutableLiveData<TwitterLoginResult>()
     val mapFragmentStarted = MutableLiveData<Boolean>()
     val destinationId = MutableLiveData<Int>()
+    var userLocation = MutableLiveData<UserLocation>()
+
+    fun tweetDetails(tweet: Tweet) {
+
+    }
 
 //    fun onTwitterCallbackReceived() {
 //                    val session = TwitterCore.getInstance().sessionManager.activeSession

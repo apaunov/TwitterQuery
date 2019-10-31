@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentTwitterBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
-import com.andreypaunov.twitterquery.models.TwitterLoginResult
 import com.twitter.sdk.android.core.Callback
 import com.twitter.sdk.android.core.Result
 import com.twitter.sdk.android.core.TwitterException
@@ -31,8 +30,8 @@ class TwitterFragment : BaseFragment() {
             override fun success(result: Result<TwitterSession>?) {
                 result?.let {
                     Log.d("====", "twitter callback")
-                    binding.viewModel?.twitterQueryRepository?.callbackReceived()
-                    binding.viewModel?.destinationId?.value = TwitterFragmentDirections.openMap().actionId
+                    viewModel?.twitterQueryRepository?.callbackReceived()
+                    viewModel?.destinationId?.value = TwitterFragmentDirections.openMap().actionId
                 }
             }
 
@@ -49,7 +48,7 @@ class TwitterFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel?.twitterLoginResult?.observe(viewLifecycleOwner, Observer<TwitterLoginResult> {
+        viewModel?.twitterLoginResult?.observe(viewLifecycleOwner, Observer {
             twitterLoginButton.onActivityResult(it.requestCode, it.resultCode, it.data)
         })
     }

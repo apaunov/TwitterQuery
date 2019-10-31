@@ -9,11 +9,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -22,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.andreypaunov.twitterquery.BuildConfig
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.ActivityMainBinding
@@ -46,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_CHECK_ACTIVITY_SETTINGS_CODE = 1000
         private const val REQUEST_LOCATION_PERMISSION_CODE = 1234
         private const val UPDATE_INTERVAL: Long = 20000
+        private const val UPDATE_FASTEST_INTERVAL: Long = 2000
     }
 
     private val viewModel by lazy {
@@ -68,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         setupActionBarWithNavController(navController)
 
-        viewModel.mapFragmentStarted.observe(this, Observer<Boolean> {
+        viewModel.mapFragmentStarted.observe(this, Observer {
             requestPermissions()
         })
 
@@ -133,6 +130,7 @@ class MainActivity : AppCompatActivity() {
     private fun createLocationRequest() {
         locationRequest = LocationRequest().apply {
             interval = UPDATE_INTERVAL
+            fastestInterval = UPDATE_FASTEST_INTERVAL
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }

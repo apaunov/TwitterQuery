@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import com.andreypaunov.twitterquery.CustomMarkerInfoWindowView
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentMapBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
@@ -16,13 +18,15 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.twitter.sdk.android.core.*
+import com.twitter.sdk.android.core.models.Search
 
 
-class MapFragment: BaseFragment(), OnMapReadyCallback {
+class MapFragment : BaseFragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
-    private lateinit var googleMap: GoogleMap
     private lateinit var mapViewBundle: Bundle
+    private var googleMap: GoogleMap? = null
 
     companion object {
         const val MAP_KEY = "MAP_KEY"
@@ -50,6 +54,20 @@ class MapFragment: BaseFragment(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel?.twitterQueryRepository?.tweetsResult?.observe(viewLifecycleOwner, Observer {
+            displayTweets(it)
+        })
+
+        viewModel?.userLocation?.observe(viewLifecycleOwner, Observer {
+            val currentLocation = LatLng(it.latitude, it.longitude)
+
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
+        })
     }
 
     override fun onStart() {
@@ -91,13 +109,11 @@ class MapFragment: BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap?) {
         if (map != null) {
             googleMap = map
+            googleMap!!.isMyLocationEnabled = true
 
-            val ny = LatLng(40.7143528, -74.0059731)
-            val marketOptions = MarkerOptions()
-            marketOptions.position(ny)
-
-            googleMap.addMarker(marketOptions)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(ny))
+            activity?.let {
+                googleMap!!.setInfoWindowAdapter(CustomMarkerInfoWindowView(it, viewModel, MapFragmentDirections.openTweetDetails().actionId))
+            }
         }
     }
 
@@ -116,15 +132,24 @@ class MapFragment: BaseFragment(), OnMapReadyCallback {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         }
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 Log.d("====", "Search submit")
-                return false
+
+                googleMap?.clear()
+
+                val userLocation = viewModel?.userLocation?.value
+
+                if (query != null && userLocation != null) {
+                    viewModel?.twitterQueryRepository?.getTweets(query, userLocation, 5)
+                }
+
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 Log.d("====", "Query text changed")
-                return true
+                return false
             }
         })
 
@@ -144,4 +169,24 @@ class MapFragment: BaseFragment(), OnMapReadyCallback {
         mapView.onSaveInstanceState(bundle)
     }
 
+    // Helper functions
+
+    private fun displayTweets(result: Result<Search>?) {
+        if (result != null) {
+            Log.d("====", "")
+
+            for (tweet in result.data.tweets) {
+                val coordinates = tweet.coordinates
+
+                coordinates?.let {
+                    Log.d("====", "Coordinate Username: ${tweet.user.name}")
+                    val markerOptions = MarkerOptions()
+                    markerOptions.position(LatLng(coordinates.latitude, coordinates.longitude))
+
+                    val marker = googleMap?.addMarker(markerOptions)
+                    marker?.tag = tweet
+                }
+            }
+        }
+    }
 }

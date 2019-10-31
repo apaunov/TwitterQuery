@@ -24,7 +24,7 @@
         android:label="MapFragment"
         tools:layout="@layout/fragment_map">
         <action
-            android:id="@+id/action_mapFragment_to_detailFragment"
+            android:id="@+id/open_tweet_details"
             app:destination="@id/detailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
