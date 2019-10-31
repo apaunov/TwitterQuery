@@ -9,7 +9,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
 import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -19,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andreypaunov.twitterquery.BuildConfig
 import com.andreypaunov.twitterquery.R
@@ -63,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         navController = findNavController(R.id.nav_host_fragment)
-        (binding.mainToolbar as Toolbar).setupWithNavController(navController)
+        setupActionBarWithNavController(navController)
 
         viewModel.mapFragmentStarted.observe(this, Observer<Boolean> {
             requestPermissions()
@@ -115,6 +118,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     // Helper functions
