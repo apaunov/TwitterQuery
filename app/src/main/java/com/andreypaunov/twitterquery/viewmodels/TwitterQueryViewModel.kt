@@ -7,6 +7,7 @@ import com.andreypaunov.twitterquery.fragments.MapFragmentDirections
 import com.andreypaunov.twitterquery.models.TwitterLoginResult
 import com.andreypaunov.twitterquery.models.UserLocation
 import com.andreypaunov.twitterquery.repositories.TwitterQueryRepository
+import com.twitter.sdk.android.core.models.Tweet
 
 class TwitterQueryViewModel : ViewModel() {
 
@@ -20,4 +21,19 @@ class TwitterQueryViewModel : ViewModel() {
         navDirections.value = MapFragmentDirections.openTweetDetails(tweetId)
     }
 
+    fun getTweet(tweetId: Long): Tweet? {
+        val tweets = twitterQueryRepository.tweetsResult.value?.data?.tweets
+        var foundTweet: Tweet? = null
+
+        if (tweets != null) {
+            for (tweet in tweets) {
+                if (tweetId == tweet.id) {
+                    foundTweet = tweet
+                    break
+                }
+            }
+        }
+
+        return foundTweet
+    }
 }

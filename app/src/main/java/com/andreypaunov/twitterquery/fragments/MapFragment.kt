@@ -3,7 +3,6 @@ package com.andreypaunov.twitterquery.fragments
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -146,7 +145,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
                 val userLocation = viewModel?.userLocation?.value
 
                 if (query != null && userLocation != null) {
-                    viewModel?.twitterQueryRepository?.getTweets(query, userLocation, 5)
+                    viewModel?.twitterQueryRepository?.getTweets(query, userLocation, 500)
                 }
 
                 return true
