@@ -78,8 +78,6 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.d("====", "Activity onActivityResult")
-
         when (requestCode) {
             REQUEST_CHECK_ACTIVITY_SETTINGS_CODE -> {
                 when (resultCode) {
@@ -144,45 +142,35 @@ class MainActivity : AppCompatActivity() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
 
         if (shouldProvideRationale) {
-            Log.i("====", "Request Permissions: Rationale")
             showSnackbar(R.string.permission_rational, R.string.permission_allow, View.OnClickListener {
                 ActivityCompat.requestPermissions(this@MainActivity, Array(1) { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_LOCATION_PERMISSION_CODE)
             })
         } else {
-            Log.i("====", "Request Permissions")
             ActivityCompat.requestPermissions(this@MainActivity, Array(1) { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_LOCATION_PERMISSION_CODE)
         }
     }
 
     private fun startLocationUpdates() {
-        Log.i("====", "Start location updates")
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.i("====", "Permission granted")
             settingsClient.checkLocationSettings(locationSettingsRequest).addOnSuccessListener {
-                Log.i("====", "checkLocationSettingsTask.addOnSuccessListener")
-
                 fusedLocationClient.lastLocation.addOnSuccessListener {
-                    Log.d("====", "lat: ${it.latitude}; long: ${it.longitude}")
                     viewModel.userLocation.value = UserLocation(it.latitude, it.longitude)
                 }.addOnFailureListener {
-                    Log.i("====", "Could not retrieve location at this time")
+                    // No-op
                 }
 
             }.addOnFailureListener {
-                Log.i("====", "checkLocationSettingsTask.addOnFailureListener")
                 when ((it as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED         -> {
                         try {
-                            Log.i("====", "LocationSettingsStatusCode RESOLUTION_REQUIRED")
                             val resolvableApiException = it as ResolvableApiException
                             resolvableApiException.startResolutionForResult(this@MainActivity, REQUEST_CHECK_ACTIVITY_SETTINGS_CODE)
                         } catch (e: IntentSender.SendIntentException) {
-                            Log.i("====", "PendingIntent unable to execute request.")
+                            // No-op
                         }
                     }
                     LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        Log.i("====", "LocationSettingsStatusCode SETTINGS_CHANGE_UNAVAILABLE")
+                        // No-op
                     }
                 }
             }

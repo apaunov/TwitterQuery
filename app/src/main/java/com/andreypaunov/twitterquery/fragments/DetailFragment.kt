@@ -21,8 +21,6 @@ class DetailFragment: BaseFragment() {
             val bundleArgs = DetailFragmentArgs.fromBundle(it)
             tweetId = bundleArgs.tweetId
         }
-
-        Log.d("====", "tweedId = $tweetId")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

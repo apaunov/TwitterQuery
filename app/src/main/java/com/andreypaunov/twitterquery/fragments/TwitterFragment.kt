@@ -29,7 +29,6 @@ class TwitterFragment : BaseFragment() {
         twitterLoginButton.callback = object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>?) {
                 result?.let {
-                    Log.d("====", "twitter callback")
                     viewModel?.twitterQueryRepository?.callbackReceived()
                     viewModel?.navDirections?.value = TwitterFragmentDirections.openMap()
                 }
@@ -37,7 +36,7 @@ class TwitterFragment : BaseFragment() {
 
             override fun failure(exception: TwitterException?) {
                 exception?.message.let {
-                    Log.d("====", it.toString())
+                    // No-op
                 }
             }
         }

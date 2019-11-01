@@ -42,8 +42,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("====", "MapFragment onCreateView")
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -51,7 +49,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         viewModel?.mapFragmentStarted?.value = true
 
         savedInstanceState?.let {
-            Log.d("====", "Map state restored")
             mapViewBundle = it.getBundle(MAP_KEY)!!
         }
 
@@ -113,8 +110,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: GoogleMap?) {
-        Log.d("====", "onMapReady")
-
         if (map != null) {
             googleMap = map
             googleMap!!.isMyLocationEnabled = true
@@ -134,8 +129,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        Log.d("====", "onCreateOptionsMenu")
-
         inflater.inflate(R.menu.options_map_menu, menu)
 
         val searchItem = menu.findItem(R.id.app_bar_search)
@@ -148,8 +141,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.d("====", "Search submit")
-
                 googleMap?.clear()
 
                 val userLocation = viewModel?.userLocation?.value
@@ -162,7 +153,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.d("====", "Query text changed")
                 return false
             }
         })
@@ -191,7 +181,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
                 val coordinates = tweet.coordinates
 
                 coordinates?.let {
-                    Log.d("====", "Coordinate Username: ${tweet.user.name}; tweetId = ${tweet.id}")
                     val markerOptions = MarkerOptions()
                     markerOptions.position(LatLng(coordinates.latitude, coordinates.longitude))
 
