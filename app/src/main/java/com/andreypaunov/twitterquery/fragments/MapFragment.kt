@@ -8,7 +8,6 @@ import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.andreypaunov.twitterquery.CustomMarkerInfoWindowView
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentMapBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
@@ -17,15 +16,19 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.twitter.sdk.android.core.*
+import com.twitter.sdk.android.core.Result
 import com.twitter.sdk.android.core.models.Search
+import com.twitter.sdk.android.core.models.Tweet
 
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private lateinit var mapViewBundle: Bundle
+    private lateinit var binding: FragmentMapBinding
+
     private var googleMap: GoogleMap? = null
 
     companion object {
@@ -39,13 +42,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentMapBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
+        Log.d("====", "MapFragment onCreateView")
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         viewModel?.mapFragmentStarted?.value = true
 
         savedInstanceState?.let {
+            Log.d("====", "Map state restored")
             mapViewBundle = it.getBundle(MAP_KEY)!!
         }
 
@@ -107,12 +113,20 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: GoogleMap?) {
+        Log.d("====", "onMapReady")
+
         if (map != null) {
             googleMap = map
             googleMap!!.isMyLocationEnabled = true
+            googleMap!!.setOnMarkerClickListener {
+                activity?.let { it1 -> hideKeyboard(it1) }
+                displayMarketInfo(it)
 
-            activity?.let {
-                googleMap!!.setInfoWindowAdapter(CustomMarkerInfoWindowView(it, viewModel, MapFragmentDirections.openTweetDetails().actionId))
+                return@setOnMarkerClickListener false
+            }
+            googleMap!!.setOnMapClickListener {
+                activity?.let { it1 -> hideKeyboard(it1) }
+                dismissMarkerInfo()
             }
         }
     }
@@ -173,13 +187,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun displayTweets(result: Result<Search>?) {
         if (result != null) {
-            Log.d("====", "")
-
             for (tweet in result.data.tweets) {
                 val coordinates = tweet.coordinates
 
                 coordinates?.let {
-                    Log.d("====", "Coordinate Username: ${tweet.user.name}")
+                    Log.d("====", "Coordinate Username: ${tweet.user.name}; tweetId = ${tweet.id}")
                     val markerOptions = MarkerOptions()
                     markerOptions.position(LatLng(coordinates.latitude, coordinates.longitude))
 
@@ -188,5 +200,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private fun displayMarketInfo(marker: Marker) {
+        val tweet = marker.tag as Tweet
+        binding.tweetId = tweet.id
+        binding.tweetText.text = tweet.text
+        binding.markerInfoCard.visibility = View.VISIBLE
+    }
+
+    private fun dismissMarkerInfo() {
+        binding.markerInfoCard.visibility = View.GONE
     }
 }

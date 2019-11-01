@@ -23,27 +23,13 @@ class TwitterQueryRepository {
     fun getTweets(query: String, userLocation: UserLocation, radius: Int) {
         val geocode = Geocode(userLocation.latitude, userLocation.longitude, radius, Geocode.Distance.KILOMETERS)
 
-        //        twitterApiClient.value?.searchService?.tweets(
-        //            "twitterdev", null, null, null, null, 20, null, 0, 0, false
-        //        )?.enqueue(object : Callback<Search>() {
-        //            override fun success(result: Result<Search>?) {
-        //                Log.d("====", "")
-        //            }
-        //
-        //            override fun failure(exception: TwitterException?) {
-        //
-        //            }
-        //        })
-
         twitterApiClient.searchService?.tweets(query, geocode, null, null, null, 100, null, 0, 0, false)?.enqueue(object : Callback<Search>() {
             override fun success(result: Result<Search>?) {
-                Log.d("====", "Tweets success")
-
                 tweetsResult.value = result
             }
 
             override fun failure(exception: TwitterException?) {
-                Log.d("====", "Tweets failure")
+                // No-op
             }
         })
     }

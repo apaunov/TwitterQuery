@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.andreypaunov.twitterquery.BuildConfig
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             requestPermissions()
         })
 
-        viewModel.destinationId.observe(this, Observer {
+        viewModel.navDirections.observe(this, Observer {
             navigate(it)
         })
     }
@@ -123,8 +124,8 @@ class MainActivity : AppCompatActivity() {
 
     // Helper functions
 
-    private fun navigate(actionId: Int) {
-        navController.navigate(actionId)
+    private fun navigate(navDirections: NavDirections) {
+        navController.navigate(navDirections)
     }
 
     private fun createLocationRequest() {
