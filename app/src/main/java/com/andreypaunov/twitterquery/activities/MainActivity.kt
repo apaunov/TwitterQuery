@@ -22,8 +22,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.andreypaunov.twitterquery.BuildConfig
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.ActivityMainBinding
-import com.andreypaunov.twitterquery.models.TwitterLoginResult
-import com.andreypaunov.twitterquery.models.UserLocation
+import com.andreypaunov.twitterquery.models.LoginResultModel
+import com.andreypaunov.twitterquery.models.UserLocationModel
 import com.andreypaunov.twitterquery.viewmodels.TwitterQueryViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -65,11 +65,11 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         setupActionBarWithNavController(navController)
 
-        viewModel.mapFragmentStarted.observe(this, Observer {
+        viewModel.mapFragmentStartedLiveData.observe(this, Observer {
             requestPermissions()
         })
 
-        viewModel.navDirections.observe(this, Observer {
+        viewModel.navDirectionsLiveData.observe(this, Observer {
             navigate(it)
         })
     }
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.twitterLoginResult.value = TwitterLoginResult(requestCode, resultCode, data)
+        viewModel.twitterLoginResultLiveData.value = LoginResultModel(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             settingsClient.checkLocationSettings(locationSettingsRequest).addOnSuccessListener {
                 fusedLocationClient.lastLocation.addOnSuccessListener {
-                    viewModel.userLocation.value = UserLocation(it.latitude, it.longitude)
+                    viewModel.userLocationLiveData.value = UserLocationModel(it.latitude, it.longitude)
                 }.addOnFailureListener {
                     // No-op
                 }

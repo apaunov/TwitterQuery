@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentDetailBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
-import com.andreypaunov.twitterquery.utils.Utils
+import com.andreypaunov.twitterquery.models.SelectedTweetModel
 
 class DetailFragment : BaseFragment() {
 
@@ -27,9 +27,9 @@ class DetailFragment : BaseFragment() {
         val binding: FragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         var tweet = viewModel?.getTweet(tweetId)
 
-        // HARD CODE Tweet
+        //TODO: HARD CODE
 //        tweet = tweet?.let { Utils.createMultiplePhotosTweet(4, it) }
-        tweet = tweet?.let { Utils.createVideoTweet(it) }
+//        tweet = tweet?.let { Utils.createVideoTweet(it) }
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

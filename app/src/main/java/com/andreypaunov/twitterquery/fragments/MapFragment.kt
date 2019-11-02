@@ -45,7 +45,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel?.mapFragmentStarted?.value = true
+        viewModel?.mapFragmentStartedLiveData?.value = true
 
         savedInstanceState?.let {
             mapViewBundle = it.getBundle(MAP_KEY)!!
@@ -61,11 +61,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel?.twitterQueryRepository?.tweetsResult?.observe(viewLifecycleOwner, Observer {
+        viewModel?.tweetsResultLiveData?.observe(viewLifecycleOwner, Observer {
             displayTweets(it)
         })
 
-        viewModel?.userLocation?.observe(viewLifecycleOwner, Observer {
+        viewModel?.userLocationLiveData?.observe(viewLifecycleOwner, Observer {
             val currentLocation = LatLng(it.latitude, it.longitude)
 
             googleMap?.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
@@ -142,10 +142,10 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 googleMap?.clear()
 
-                val userLocation = viewModel?.userLocation?.value
+                val userLocation = viewModel?.userLocationLiveData?.value
 
                 if (query != null && userLocation != null) {
-                    viewModel?.twitterQueryRepository?.getTweets(query, userLocation, 500)
+                    viewModel?.getTweets(query, userLocation, 500)
                 }
 
                 return true

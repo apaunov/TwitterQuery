@@ -1,7 +1,6 @@
 package com.andreypaunov.twitterquery.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +28,8 @@ class TwitterFragment : BaseFragment() {
         twitterLoginButton.callback = object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>?) {
                 result?.let {
-                    viewModel?.twitterQueryRepository?.callbackReceived()
-                    viewModel?.navDirections?.value = TwitterFragmentDirections.openMap()
+                    viewModel?.callbackReceived()
+                    viewModel?.navDirectionsLiveData?.value = TwitterFragmentDirections.openMap()
                 }
             }
 
@@ -47,7 +46,7 @@ class TwitterFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel?.twitterLoginResult?.observe(viewLifecycleOwner, Observer {
+        viewModel?.twitterLoginResultLiveData?.observe(viewLifecycleOwner, Observer {
             twitterLoginButton.onActivityResult(it.requestCode, it.resultCode, it.data)
         })
     }
