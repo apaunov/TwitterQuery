@@ -32,8 +32,9 @@ fun setRecyclerViewData(recyclerView: RecyclerView, extendedEntities: TweetEntit
 @BindingAdapter("app:videoData")
 fun setVideoData(videoView: VideoView, extendedEntities: TweetEntities) {
     val media = extendedEntities.media
+    val firstEntityType = media.first().type
 
-    if (media.isNotEmpty() && media.first().type.equals("video", true)) {
+    if (media.isNotEmpty() && firstEntityType.equals("video", true) || firstEntityType.equals("animated_gif", true)) {
         var videoPath = ""
 
         for (variant in media.first().videoInfo.variants) {
