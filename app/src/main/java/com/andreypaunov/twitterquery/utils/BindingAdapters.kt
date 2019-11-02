@@ -1,19 +1,21 @@
 package com.andreypaunov.twitterquery.utils
 
+import android.content.res.ColorStateList
 import android.net.Uri
-import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.MediaController
+import android.widget.VideoView
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.adapters.TweetImageAdapter
-import com.andreypaunov.twitterquery.models.SelectedTweetModel
-import com.twitter.sdk.android.core.Callback
-import com.twitter.sdk.android.core.Result
-import com.twitter.sdk.android.core.TwitterException
-import com.twitter.sdk.android.core.models.Tweet
+import com.andreypaunov.twitterquery.models.FavoredTweetModel
+import com.andreypaunov.twitterquery.models.RetweetedTweedModel
 import com.twitter.sdk.android.core.models.TweetEntities
 
 @BindingAdapter("app:userAvatar")
@@ -68,9 +70,9 @@ fun setVideoData(videoView: VideoView, extendedEntities: TweetEntities) {
 }
 
 @BindingAdapter(value = ["app:favored", "app:tweetId"])
-fun setFavoriteIcon(imageView: ImageView, selectedTweetModel: SelectedTweetModel?, tweetId: Long) {
-    if (selectedTweetModel != null) {
-        if (selectedTweetModel.tweetId == tweetId && selectedTweetModel.selected) {
+fun setFavoriteIcon(imageView: ImageView, favoredTweetModel: FavoredTweetModel?, tweetId: Long) {
+    if (favoredTweetModel != null) {
+        if (favoredTweetModel.tweetId == tweetId && favoredTweetModel.favored) {
             imageView.setImageResource(R.drawable.ic_favorite)
         } else {
             imageView.setImageResource(R.drawable.ic_favorite_border)
@@ -78,7 +80,11 @@ fun setFavoriteIcon(imageView: ImageView, selectedTweetModel: SelectedTweetModel
     }
 }
 
-//@BindingAdapter("app:retweetCount")
-//fun onRetweet(imageView: ImageView, tweet: Tweet) {
-//
-//}
+@BindingAdapter(value = ["app:retweeted", "tweetId"])
+fun setRetweetIcon(imageView: ImageView, retweetedTweedModel: RetweetedTweedModel?, tweetId: Long) {
+    if (retweetedTweedModel != null) {
+        if (retweetedTweedModel.tweetId == tweetId && retweetedTweedModel.retweeted) {
+            ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(ContextCompat.getColor(imageView.context, R.color.colorPrimaryDark)))
+        }
+    }
+}

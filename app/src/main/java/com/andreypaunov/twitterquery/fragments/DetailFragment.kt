@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentDetailBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
-import com.andreypaunov.twitterquery.models.SelectedTweetModel
 
 class DetailFragment : BaseFragment() {
 

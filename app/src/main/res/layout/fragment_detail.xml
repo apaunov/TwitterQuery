@@ -154,7 +154,7 @@
                             android:layout_height="20dp"
                             android:onClick="@{() -> viewModel.onLike(tweetId)}"
                             android:tint="@color/colorAccent"
-                            app:favored="@{viewModel.selectedTweetLiveData}"
+                            app:favored="@{viewModel.favoredTweetLiveData}"
                             app:srcCompat="@drawable/ic_favorite_border"
                             app:tweetId="@{tweetId}" />
 
@@ -163,7 +163,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginStart="8dp"
-                            android:text="@{Integer.toString(viewModel.likesLiveData)}"
+                            android:text="@{Integer.toString(viewModel.favoredTweetLiveData.favoredCount)}"
                             tools:text="Likes count" />
 
                         <Space
@@ -174,15 +174,18 @@
                             android:id="@+id/retweet_image"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:onClick="@{() -> viewModel.onRetweet(tweetId)}"
                             android:tint="@color/colorPrimary"
-                            app:srcCompat="@drawable/ic_retweet" />
+                            app:retweeted="@{viewModel.retweetedTweetLiveData}"
+                            app:srcCompat="@drawable/ic_retweet"
+                            app:tweetId="@{tweetId}" />
 
                         <TextView
                             android:id="@+id/retweet_count_text"
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginStart="8dp"
-                            android:text="@{Integer.toString(viewModel.retweetsLiveData)}"
+                            android:text="@{Integer.toString(viewModel.retweetedTweetLiveData.retweetedCount)}"
                             tools:text="Retweet count" />
                     </LinearLayout>
 

@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
 import com.andreypaunov.twitterquery.fragments.MapFragmentDirections
+import com.andreypaunov.twitterquery.models.FavoredTweetModel
 import com.andreypaunov.twitterquery.models.LoginResultModel
-import com.andreypaunov.twitterquery.models.SelectedTweetModel
+import com.andreypaunov.twitterquery.models.RetweetedTweedModel
 import com.andreypaunov.twitterquery.models.UserLocationModel
 import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.models.Search
@@ -20,11 +21,10 @@ class TwitterQueryViewModel : ViewModel() {
     val mapFragmentStartedLiveData = MutableLiveData<Boolean>()
     val navDirectionsLiveData = MutableLiveData<NavDirections>()
     var userLocationLiveData = MutableLiveData<UserLocationModel>()
-    var likesLiveData = MutableLiveData<Int>()
-    var retweetsLiveData = MutableLiveData<Int>()
-    var selectedTweetLiveData = MutableLiveData<SelectedTweetModel>()
+    var favoredTweetLiveData = MutableLiveData<FavoredTweetModel>()
+    var retweetedTweetLiveData = MutableLiveData<RetweetedTweedModel>()
 
-    lateinit var twitterApiClient: TwitterApiClient
+    private lateinit var twitterApiClient: TwitterApiClient
 
     fun callbackReceived() {
         twitterApiClient = TwitterCore.getInstance().apiClient
@@ -68,8 +68,10 @@ class TwitterQueryViewModel : ViewModel() {
     fun onLike(tweetId: Long) {
         twitterApiClient.favoriteService?.create(tweetId, true)?.enqueue(object : Callback<Tweet>() {
             override fun success(result: Result<Tweet>?) {
-                if (result != null) {
-                    selectedTweetLiveData.value = SelectedTweetModel(tweetId, true)
+                val tweet = result?.data
+
+                if (tweet != null) {
+                    favoredTweetLiveData.value = FavoredTweetModel(tweetId, true, tweet.favoriteCount)
                 }
             }
 
@@ -85,7 +87,11 @@ class TwitterQueryViewModel : ViewModel() {
     fun onDislike(tweetId: Long) {
         twitterApiClient.favoriteService.destroy(tweetId, true).enqueue(object : Callback<Tweet>() {
             override fun success(result: Result<Tweet>?) {
-                selectedTweetLiveData.value = SelectedTweetModel(tweetId, false)
+                val tweet = result?.data
+
+                if (tweet != null) {
+                    favoredTweetLiveData.value = FavoredTweetModel(tweetId, false, tweet.favoriteCount)
+                }
             }
 
             override fun failure(exception: TwitterException?) {
@@ -98,10 +104,18 @@ class TwitterQueryViewModel : ViewModel() {
         twitterApiClient.statusesService.retweet(tweetId, false).enqueue(object : Callback<Tweet>() {
             override fun success(result: Result<Tweet>?) {
                 Log.d("====", "Retweet")
+                val tweet = result?.data
+
+                if (tweet != null) {
+                    retweetedTweetLiveData.value = RetweetedTweedModel(tweetId, true, tweet.retweetCount)
+                }
             }
 
             override fun failure(exception: TwitterException?) {
                 // No-op
+                if (exception != null) {
+                    Log.d("====", "Retweet failed; ${exception.message}")
+                }
             }
         })
     }
@@ -112,7 +126,8 @@ class TwitterQueryViewModel : ViewModel() {
                 if (result != null) {
                     for (tweet in result.data) {
                         if (tweet.id == tweetId) {
-                            selectedTweetLiveData.value = SelectedTweetModel(tweetId, tweet.favorited)
+                            favoredTweetLiveData.value = FavoredTweetModel(tweetId, tweet.favorited, tweet.favoriteCount)
+                            retweetedTweetLiveData.value = RetweetedTweedModel(tweetId, tweet.retweeted, tweet.retweetCount)
                             break
                         }
                     }
