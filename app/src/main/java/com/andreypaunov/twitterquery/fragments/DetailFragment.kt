@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.andreypaunov.twitterquery.R
 import com.andreypaunov.twitterquery.databinding.FragmentDetailBinding
 import com.andreypaunov.twitterquery.fragments.base.BaseFragment
+import com.andreypaunov.twitterquery.utils.Utils
 
 class DetailFragment : BaseFragment() {
 
@@ -24,11 +25,7 @@ class DetailFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
-        var tweet = viewModel?.getTweet(tweetId)
-
-        //TODO: HARD CODE
-//        tweet = tweet?.let { Utils.createMultiplePhotosTweet(4, it) }
-//        tweet = tweet?.let { Utils.createVideoTweet(it) }
+        val tweet = viewModel.getTweet(tweetId)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

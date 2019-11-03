@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_rational">Activer la localisation pour voir des tweets</string>
+    <string name="permission_denied">Accès à la localisation refusé</string>
+    <string name="permission_allow">Autoriser</string>
+    <string name="permission_settings">Paramètres</string>
+    <string name="search_hint">Recherche des tweets</string>
+    <string name="search_menu">Chercher</string>
+    <string name="tweet_more_info_button">Plus d\'informations</string>
+</resources>

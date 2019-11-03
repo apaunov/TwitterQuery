@@ -16,13 +16,13 @@ import com.twitter.sdk.android.core.services.params.Geocode
 
 class TwitterQueryViewModel : ViewModel() {
 
-    var tweetsResultLiveData = MutableLiveData<Result<Search>?>()
     val twitterLoginResultLiveData = MutableLiveData<LoginResultModel>()
     val mapFragmentStartedLiveData = MutableLiveData<Boolean>()
     val navDirectionsLiveData = MutableLiveData<NavDirections>()
-    var userLocationLiveData = MutableLiveData<UserLocationModel>()
-    var favoredTweetLiveData = MutableLiveData<FavoredTweetModel>()
-    var retweetedTweetLiveData = MutableLiveData<RetweetedTweedModel>()
+    val tweetsResultLiveData = MutableLiveData<Result<Search>?>()
+    val userLocationLiveData = MutableLiveData<UserLocationModel>()
+    val favoredTweetLiveData = MutableLiveData<FavoredTweetModel>()
+    val retweetedTweetLiveData = MutableLiveData<RetweetedTweedModel>()
 
     private lateinit var twitterApiClient: TwitterApiClient
 

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TwitterQuery</string>
-    <string name="twitter_api_key">V8uPJbl7iJs72wI8VqAW06RnP</string>
-    <string name="twitter_api_secret_key">4ETELUVIYlVmZhgvwTwxSIiKSclz4ESfeZdV850YzBNNJ04wdb</string>
+    <string name="app_name" translatable="false">TwitterQuery</string>
+    <string name="twitter_api_key" translatable="false">V8uPJbl7iJs72wI8VqAW06RnP</string>
+    <string name="twitter_api_secret_key" translatable="false">4ETELUVIYlVmZhgvwTwxSIiKSclz4ESfeZdV850YzBNNJ04wdb</string>
     <string name="permission_rational">Enable location to see tweets</string>
     <string name="permission_denied">Location access denied</string>
     <string name="permission_allow">Allow</string>

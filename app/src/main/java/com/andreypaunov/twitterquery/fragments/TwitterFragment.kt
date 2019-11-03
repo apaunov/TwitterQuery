@@ -28,8 +28,8 @@ class TwitterFragment : BaseFragment() {
         twitterLoginButton.callback = object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>?) {
                 result?.let {
-                    viewModel?.callbackReceived()
-                    viewModel?.navDirectionsLiveData?.value = TwitterFragmentDirections.openMap()
+                    viewModel.callbackReceived()
+                    viewModel.navDirectionsLiveData.value = TwitterFragmentDirections.openMap()
                 }
             }
 
@@ -46,7 +46,7 @@ class TwitterFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel?.twitterLoginResultLiveData?.observe(viewLifecycleOwner, Observer {
+        viewModel.twitterLoginResultLiveData.observe(viewLifecycleOwner, Observer {
             twitterLoginButton.onActivityResult(it.requestCode, it.resultCode, it.data)
         })
     }

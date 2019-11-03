@@ -2,11 +2,9 @@ package com.andreypaunov.twitterquery.utils
 
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.util.DisplayMetrics
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.MediaController
-import android.widget.VideoView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
@@ -59,6 +57,10 @@ fun setVideoData(videoView: VideoView, extendedEntities: TweetEntities) {
                 val uri = Uri.parse(videoPath)
                 val mediaController = MediaController(videoView.context)
                 mediaController.setAnchorView(videoView)
+
+                val displayPoint = Utils.getDisplayPoint(videoView.context)
+
+                videoView.layoutParams = FrameLayout.LayoutParams(displayPoint.x, displayPoint.x)
 
                 videoView.setMediaController(mediaController)
                 videoView.setVideoURI(uri)

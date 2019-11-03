@@ -27,6 +27,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var mapViewBundle: Bundle
     private lateinit var binding: FragmentMapBinding
+    private lateinit var searchView: SearchView
 
     private var googleMap: GoogleMap? = null
 
@@ -45,7 +46,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel?.mapFragmentStartedLiveData?.value = true
+        viewModel.mapFragmentStartedLiveData.value = true
 
         savedInstanceState?.let {
             mapViewBundle = it.getBundle(MAP_KEY)!!
@@ -61,11 +62,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel?.tweetsResultLiveData?.observe(viewLifecycleOwner, Observer {
+        viewModel.tweetsResultLiveData.observe(viewLifecycleOwner, Observer {
             displayTweets(it)
         })
 
-        viewModel?.userLocationLiveData?.observe(viewLifecycleOwner, Observer {
+        viewModel.userLocationLiveData.observe(viewLifecycleOwner, Observer {
             val currentLocation = LatLng(it.latitude, it.longitude)
 
             googleMap?.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
@@ -131,7 +132,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         inflater.inflate(R.menu.options_map_menu, menu)
 
         val searchItem = menu.findItem(R.id.app_bar_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
         searchItem.apply {
@@ -140,13 +141,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                googleMap?.clear()
-
-                val userLocation = viewModel?.userLocationLiveData?.value
-
-                if (query != null && userLocation != null) {
-                    viewModel?.getTweets(query, userLocation, 500)
-                }
+                performSearch(query)
 
                 return true
             }
@@ -199,5 +194,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun dismissMarkerInfo() {
         binding.markerInfoCard.visibility = View.GONE
+    }
+
+    fun performSearch(query: String?) {
+        googleMap?.clear()
+        activity?.let { hideKeyboard(it) }
+
+        val userLocation = viewModel.userLocationLiveData.value
+
+        if (query != null && userLocation != null) {
+            viewModel.getTweets(query, userLocation, 5)
+        }
     }
 }
