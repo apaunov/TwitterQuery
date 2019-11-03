@@ -103,7 +103,6 @@ class TwitterQueryViewModel : ViewModel() {
     fun onRetweet(tweetId: Long) {
         twitterApiClient.statusesService.retweet(tweetId, false).enqueue(object : Callback<Tweet>() {
             override fun success(result: Result<Tweet>?) {
-                Log.d("====", "Retweet")
                 val tweet = result?.data
 
                 if (tweet != null) {
@@ -113,9 +112,6 @@ class TwitterQueryViewModel : ViewModel() {
 
             override fun failure(exception: TwitterException?) {
                 // No-op
-                if (exception != null) {
-                    Log.d("====", "Retweet failed; ${exception.message}")
-                }
             }
         })
     }
